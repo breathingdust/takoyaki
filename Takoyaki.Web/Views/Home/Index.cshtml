@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Discrepancies";
+}
+<div ng-controller="DeploymentsController as deployments">
+    <div class="row margin-bottom-md">
+        <div class="col-md-8">
+            <h1>Compare Environments</h1>
+
+            Compare <select class="input-lg" ng-options="environment.Name for environment in deployments.environments" ng-model="deployments.environmentOne"></select>
+            with <select class="input-lg" ng-options="environment.Name for environment in deployments.environments" ng-model="deployments.environmentTwo"></select>
+            <button class="btn btn-lg" ng-class="deployments.isLoading ? 'btn-warning' : ''" ng-click="deployments.compare()">
+                <span ng-show="deployments.isLoading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+                {{deployments.buttonText}}
+            </button>
+        </div>
+    </div>
+    <div class="row margin-bottom-md">
+        <div class="col-md-8">
+            <p ng-show="deployments.totalProjects != null">{{deployments.projectsWithDiscrepancies}} projects releases version numbers differ out of a total of {{deployments.totalProjects}}</p>
+        </div>
+    </div>
+    <div class="row margin-bottom-md">
+        <div class="col-md-8">
+            <table class="table table-striped" style="width: 800px;">
+                <thead>
+                    <tr>
+                        <th>
+                            Project
+                        </th>
+                        <th>
+                            <span style="white-space: nowrap">{{deployments.environmentOne.Name}}</span>
+                        </th>
+                        <th>
+                            Deployed On
+                        </th>
+                        <th>
+                            <span style="white-space: nowrap">{{deployments.environmentTwo.Name}}</span>
+                        </th>
+                        <th>
+                            Deployed On
+                        </th>
+                        <th>
+                            Age
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="d in deployments.discrepancies">
+                        <td>
+                            {{d.Project}}
+                        </td>
+                        <td>
+                            {{d.VersionOne}}
+                        </td>
+                        <td>
+                            {{d.VersionOneDeployDate}}
+                        </td>
+                        <td>
+                            {{d.VersionTwo}}
+                        </td>
+                        <td>
+                            {{d.VersionTwoDeployDate}}
+                        </td>
+                        <td ng-class="(d.AgeInDays > 14 || d.AgeInDays < -14)?'warning':''">
+                            {{d.AgeInDays}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
