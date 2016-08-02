@@ -2,11 +2,14 @@
 {
     public class EnvironmentDiscrepancy
     {
-        public string Project { get; set; }
-        public string VersionOne { get; set; }
-        public string VersionOneDeployDate { get; set; }
-        public string VersionTwo { get; set; }
-        public string VersionTwoDeployDate { get; set; }
+        public string ProjectId { get; set; }
+        public string ProjectName { get; set; }
+        public string ReleaseOneId { get; set; }
+        public string ReleaseOneName { get; set; }
+        public string ReleaseOneDeployDate { get; set; }
+        public string ReleaseTwoId { get; set; }
+        public string ReleaseTwoName { get; set; }
+        public string ReleaseTwoDeployDate { get; set; }
         public string AgeInDays { get; set; }
     }
 }

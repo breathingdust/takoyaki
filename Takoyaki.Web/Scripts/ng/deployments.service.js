@@ -10,7 +10,9 @@
     function deploymentsService($http) {
         return {
             compareEnvironments: compareEnvironments,
-            getAvailableEnvironments: getAvailableEnvironments
+            getAvailableEnvironments: getAvailableEnvironments,
+            deploy: deploy,
+            getTaskStatus: getTaskStatus
         };
 
         function compareEnvironments(env1, env2) {
@@ -36,7 +38,37 @@
             }).then(onGetAvailableEnvironmentsLoadedSuccess);
         }
 
+        function getTaskStatus(taskId) {
+            var endpoint = "/octopus/getServerTaskStatus/?taskid=" + taskId;
+            return $http({
+                method: 'get',
+                url: endpoint
+            });
+        }
+
+        function deploy(releaseId,environmentId) {
+            var endpoint = "/octopus/deploy";
+
+            var body = {
+                releaseId: releaseId,
+                environmentId: environmentId
+            };
+
+            return $http({
+                method: 'post',
+                url: endpoint,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(body)
+            }).then(onDeploySuccess);
+        }
+
         function onGetAvailableEnvironmentsLoadedSuccess(response) {
+            return response.data;
+        }
+
+        function onDeploySuccess(response) {
             return response.data;
         }
     }

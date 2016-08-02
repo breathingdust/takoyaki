@@ -42,27 +42,39 @@
                         <th>
                             Age
                         </th>
+                        <th>
+                            Consolidate Forward
+                        </th>
+                        <th>
+                            Consolidate Backward
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="d in deployments.discrepancies">
                         <td>
-                            {{d.Project}}
+                            {{d.ProjectName}}
                         </td>
                         <td>
-                            {{d.VersionOne}}
+                            {{d.ReleaseOneName}}
                         </td>
                         <td>
-                            {{d.VersionOneDeployDate}}
+                            {{d.ReleaseOneDeployDate}}
                         </td>
                         <td>
-                            {{d.VersionTwo}}
+                            {{d.ReleaseTwoName}}
                         </td>
                         <td>
-                            {{d.VersionTwoDeployDate}}
+                            {{d.ReleaseTwoDeployDate}}
                         </td>
                         <td ng-class="(d.AgeInDays > 14 || d.AgeInDays < -14)?'warning':''">
                             {{d.AgeInDays}}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm" ng-disabled="d.ReleaseOneId === d.ReleaseTwoId || !d.ReleaseOneId || (deployments.deployingProjectId && deployments.deployingProjectId !== d.ProjectId)" ng-click="deployments.deployForward(d)"><span ng-show="deployments.deployingProjectId === d.ProjectId" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>&nbsp;{{deployments.forwardButtonName(d)}}</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm" ng-disabled="d.ReleaseOneId === d.ReleaseTwoId || !d.ReleaseTwoId" ng-click="deployments.deployBackward(d)">{{d.ReleaseTwoName}} to {{deployments.environmentOne.Name}}</button>
                         </td>
                     </tr>
                 </tbody>

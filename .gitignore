@@ -48,64 +48,65 @@ artifacts/
 *_i.h
 *.ilk
 *.meta
-*.obj
+*.ncb
 *.pch
 *.pdb
 *.pgc
 *.pgd
-*.rsp
+*.suo
 *.sbr
 *.tlb
 *.tli
 *.tlh
-*.tmp
-*.tmp_proj
+*.bak
+*.[Cc]ache
+*.ilk
 *.log
 *.vspscc
 *.vssscc
 .builds
-*.pidb
+*.lib
 *.svclog
-*.scc
-
+*.sbr
+*.sdf
 # Chutzpah Test files
 _Chutzpah*
 
 # Visual C++ cache files
 ipch/
-*.aps
-*.ncb
-*.opendb
+.vs/
+obj/
+[Bb]in
 *.opensdf
 *.sdf
 *.cachefile
-
+[Dd]ebug*/
 # Visual Studio profiler
 *.psess
 *.vsp
 *.vspx
 *.sap
-
+[Rr]elease*/
 # TFS 2012 Local Workspace
 $tf/
+Ankh.NoLoad
 
-# Guidance Automation Toolkit
 *.gpState
-
+#Tooling
 # ReSharper is a .NET coding add-in
 _ReSharper*/
-*.[Rr]e[Ss]harper
+*.resharper
 *.DotSettings.user
-
+[Tt]est[Rr]esult*
 # JustCode is a .NET coding add-in
 .JustCode
 
 # TeamCity is a build add-in
 _TeamCity*
-
+#Project files
 # DotCover is a Code Coverage Tool
 *.dotCover
-
+[Bb]uild/
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml
@@ -114,10 +115,10 @@ nCrunchTemp_*
 # MightyMoose
 *.mm.*
 AutoTest.Net/
-
+#Subversion files
 # Web workbench (sass)
 .sass-cache/
-
+.svn
 # Installshield output folder
 [Ee]xpress/
 
@@ -130,10 +131,10 @@ DocProject/Help/*.hhk
 DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
-
+# Office Temp Files
 # Click-Once directory
 publish/
-
+~$*
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
@@ -142,14 +143,14 @@ publish/
 *.pubxml
 *.publishproj
 
-# NuGet Packages
+#NuGet Packages
 *.nupkg
 # The packages folder can be ignored because of Package Restore
-**/packages/*
+packages/
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
-#!**/packages/repositories.config
+!packages/repositories.config
 # NuGet v3's project.json files produces more ignoreable files
 *.nuget.props
 *.nuget.targets
@@ -157,24 +158,24 @@ publish/
 # Microsoft Azure Build Output
 csx/
 *.build.csdef
-
+# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 # Microsoft Azure Emulator
 ecf/
 rcf/
-
+!packages/*/build/
 # Microsoft Azure ApplicationInsights config file
 ApplicationInsights.config
 
 # Windows Store app package directory
 AppPackages/
 BundleArtifacts/
-
+#log4net logs
 # Visual Studio cache files
 # files ending in .cache can be ignored
 *.[Cc]ache
 # but keep track of directories ending in .cache
 !*.[Cc]ache/
-
+*.log.*
 # Others
 ClientBin/
 ~$*
@@ -188,7 +189,7 @@ orleans.codegen.cs
 
 # RIA/Silverlight projects
 Generated_Code/
-
+*.orig
 # Backup & report files from converting an old project file
 # to a newer Visual Studio version. Backup files are not needed,
 # because we have git ;-)
@@ -197,18 +198,18 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
-# SQL Server files
+# Oracle SQL Temp Files
 *.mdf
-*.ldf
+*.~sql
 
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout
 *.bim_*.settings
-
+#node.js
 # Microsoft Fakes
 FakesAssemblies/
-
+node_modules
 # GhostDoc plugin setting file
 *.GhostDoc.xml
 
@@ -217,7 +218,7 @@ FakesAssemblies/
 
 # Visual Studio 6 build log
 *.plg
-
+appSettings.local
 # Visual Studio 6 workspace options file
 *.opt
 

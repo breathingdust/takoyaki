@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using log4net;
 using Octopus.Client;
+using Octopus.Client.Model;
 using Takoyaki.Octopus.Models;
 
 namespace Takoyaki.Octopus
@@ -37,26 +39,62 @@ namespace Takoyaki.Octopus
             }).ToList();
         }
 
-        public EnvironmentComparisionModel HighlightDeployedVersionDifferences(string environment1, string environment2)
+        public string Deploy(string releaseId, string environmentId)
         {
-            var environmentDescriptor = _repository.Environments.FindByName(environment1);
-            var environmentDescriptor2 = _repository.Environments.FindByName(environment2);
+            GuardAgainstDeploysToDisabledEnvironments(environmentId);
+
+            var deploymentResource = _repository.Deployments.Create(new DeploymentResource
+            {
+                Comments = "Automated deploy to consolidate environments",
+                EnvironmentId = environmentId,
+                ReleaseId = releaseId
+            });
+
+            return deploymentResource.TaskId;
+        }
+
+        public string GetServerTaskStatus(string taskId)
+        {
+            return _repository.Tasks.Get(taskId).State.ToString();
+        }
+
+        private void GuardAgainstDeploysToDisabledEnvironments(string environmentId)
+        {
+            var disabledEnvironmentNames =
+                ConfigurationManager.AppSettings["Octopus.DisableConsolidationToEnvironments"].Split(',');
+
+            var targetEnvironment = _repository.Environments.Get(environmentId);
+
+            if (targetEnvironment == null)
+                throw new Exception($"No environment found with id: {environmentId}");
+
+            if (disabledEnvironmentNames.Contains(targetEnvironment.Name))
+                throw new Exception($"Creating deployments targeting the {targetEnvironment.Name} environment is disabled.");
+        }
+
+
+        public EnvironmentComparisonModel HighlightDeployedVersionDifferences(string environment1, string environment2)
+        {
+            var environmentOneDescriptor = _repository.Environments.FindByName(environment1);
+            var environmentTwoDescriptor = _repository.Environments.FindByName(environment2);
 
             var projects = _repository.Projects.FindAll();
 
-            var model = new EnvironmentComparisionModel
+            var model = new EnvironmentComparisonModel
             {
-                One = environment1,
-                Two = environment2,
+                EnvironmentOneId = environmentOneDescriptor.Id,
+                EnvironmentOneName = environmentOneDescriptor.Name,
+                EnvironmentTwoId = environmentTwoDescriptor.Id,
+                EnvironmentTwoName = environmentTwoDescriptor.Name,
                 TotalProjects = projects.Count
             };
 
             foreach (var projectResource in projects)
             {
                 var deployedOne = _repository.Deployments.FindAll(new[] { projectResource.Id },
-                    new[] { environmentDescriptor.Id }).Items.FirstOrDefault();
+                    new[] { environmentOneDescriptor.Id }).Items.FirstOrDefault();
                 var deployedTwo = _repository.Deployments.FindAll(new[] { projectResource.Id },
-                    new[] { environmentDescriptor2.Id }).Items.FirstOrDefault();
+                    new[] { environmentTwoDescriptor.Id }).Items.FirstOrDefault();
 
                 if ((deployedOne != null && deployedTwo != null)
                     && deployedOne.ReleaseId != deployedTwo.ReleaseId)
@@ -66,11 +104,14 @@ namespace Takoyaki.Octopus
 
                     model.Discrepancies.Add(new EnvironmentDiscrepancy
                     {
-                        Project = projectResource.Name,
-                        VersionOne = releaseOne.Version,
-                        VersionOneDeployDate = deployedOne.Created.ToString("g"),
-                        VersionTwo = releaseTwo.Version,
-                        VersionTwoDeployDate = deployedTwo.Created.ToString("g"),
+                        ProjectId = projectResource.Id,
+                        ProjectName = projectResource.Name,
+                        ReleaseOneId = releaseOne.Id,
+                        ReleaseOneName = releaseOne.Version,
+                        ReleaseOneDeployDate = deployedOne.Created.ToString("g"),
+                        ReleaseTwoId = releaseTwo.Id,
+                        ReleaseTwoName = releaseTwo.Version,
+                        ReleaseTwoDeployDate = deployedTwo.Created.ToString("g"),
                         AgeInDays = (deployedTwo.Created - deployedOne.Created).Days.ToString()
                     });
                 }
